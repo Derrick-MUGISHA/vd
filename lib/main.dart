@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'login_page.dart';
 import 'notifications_page.dart';
 import 'cards_page.dart';
 import 'electricity_page.dart';
@@ -7,6 +8,7 @@ import 'filter_page.dart';
 import 'transactions_page.dart';
 import 'services_page.dart';
 import 'send_money_page.dart';
+import 'profile_settings_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF8F9FA),
       ),
-      home: const MainNavigator(),
+      home: const LoginPage(), // Start with login page
       debugShowCheckedModeBanner: false,
     );
   }
@@ -49,6 +51,7 @@ class _MainNavigatorState extends State<MainNavigator> {
     const TransactionsPage(),
     const ServicesPage(),
     const SendMoneyPage(),
+    const ProfileSettingsPage(),
   ];
 
   @override
@@ -104,6 +107,11 @@ class _MainNavigatorState extends State<MainNavigator> {
               icon: Icons.send,
               label: 'Send Money',
               index: 6,
+            ),
+            _buildNavItem(
+              icon: Icons.settings,
+              label: 'Settings',
+              index: 7,
             ),
           ],
         ),
