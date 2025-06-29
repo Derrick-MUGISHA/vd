@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fitness/home.dart';
 import 'package:fitness/MorePage.dart';
-import 'package:fitness/profile.dart';
 import 'package:fitness/SendPage.dart';
 import 'package:fitness/CardsPage.dart';
 
@@ -14,7 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MainPage());
+    return MaterialApp(
+      title: 'Vidari Pay',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        fontFamily: 'SF Pro Display',
+        useMaterial3: true,
+      ),
+      home: const MainPage(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
@@ -70,13 +78,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(26.0),
+        margin: const EdgeInsets.all(20.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25.0),
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.1),
               spreadRadius: 0,
               blurRadius: 20,
@@ -127,10 +134,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       animation: _animationController,
       builder: (context, child) {
         return Transform.scale(
-          scale:
-              isSelected && _animationController.isAnimating
-                  ? _scaleAnimation.value
-                  : 1.0,
+          scale: isSelected && _animationController.isAnimating
+              ? _scaleAnimation.value
+              : 1.0,
           child: GestureDetector(
             onTap: () => _onItemTapped(index),
             child: AnimatedContainer(
@@ -141,25 +147,24 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 horizontal: 16.0,
               ),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.grey.shade100 : Colors.transparent,
+                color: isSelected 
+                    ? const Color(0xFF6C5CE7).withOpacity(0.1) 
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Center vertically
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Center horizontally
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       isSelected ? filledIcon : outlinedIcon,
                       key: ValueKey(isSelected),
-                      color:
-                          isSelected
-                              ? Colors.green.shade600
-                              : Colors.grey.shade500,
+                      color: isSelected
+                          ? const Color(0xFF6C5CE7)
+                          : Colors.grey.shade500,
                       size: 24,
                     ),
                   ),
@@ -167,10 +172,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 200),
                     style: TextStyle(
-                      color:
-                          isSelected
-                              ? Colors.green.shade600
-                              : Colors.grey.shade500,
+                      color: isSelected
+                          ? const Color(0xFF6C5CE7)
+                          : Colors.grey.shade500,
                       fontSize: 12,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.normal,
