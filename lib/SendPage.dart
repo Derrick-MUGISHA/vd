@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+class SendPage extends StatelessWidget {
+  const SendPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Settings Page', style: TextStyle(fontSize: 24)),
+        child: Text('Search Page', style: TextStyle(fontSize: 24)),
       ),
     );
   }
