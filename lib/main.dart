@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'home_page.dart';
+import 'notifications_page.dart';
+import 'cards_page.dart';
+import 'electricity_page.dart';
+import 'filter_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,8 +22,105 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF8F9FA),
       ),
-      home: const HomePage(),
+      home: const MainNavigator(),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class MainNavigator extends StatefulWidget {
+  const MainNavigator({super.key});
+
+  @override
+  State<MainNavigator> createState() => _MainNavigatorState();
+}
+
+class _MainNavigatorState extends State<MainNavigator> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    const NotificationsPage(),
+    const CardsPage(),
+    const ElectricityPage(),
+    const FilterPage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: Container(
+        height: 80,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 20,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(
+              icon: Icons.notifications_outlined,
+              label: 'Notifications',
+              index: 0,
+            ),
+            _buildNavItem(
+              icon: Icons.credit_card_outlined,
+              label: 'Cards',
+              index: 1,
+            ),
+            _buildNavItem(
+              icon: Icons.flash_on_outlined,
+              label: 'Electricity',
+              index: 2,
+            ),
+            _buildNavItem(
+              icon: Icons.tune,
+              label: 'Filter',
+              index: 3,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    required int index,
+  }) {
+    final isSelected = _currentIndex == index;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: isSelected ? const Color(0xFF4CAF50) : const Color(0xFF666666),
+            size: 24,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isSelected ? const Color(0xFF4CAF50) : const Color(0xFF666666),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
