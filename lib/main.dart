@@ -147,16 +147,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 horizontal: 16.0,
               ),
               decoration: BoxDecoration(
-<<<<<<< HEAD
-                color:
-                    isSelected
-                        ? const Color(0xFF6C5CE7).withOpacity(0.1)
-                        : Colors.transparent,
-=======
                 color: isSelected 
                     ? const Color(0xFF6C5CE7).withOpacity(0.1) 
                     : Colors.transparent,
->>>>>>> 602537a2cb000f2d1ede5a15b68d81a620591da8
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Column(
@@ -169,16 +162,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     child: Icon(
                       isSelected ? filledIcon : outlinedIcon,
                       key: ValueKey(isSelected),
-<<<<<<< HEAD
-                      color:
-                          isSelected
-                              ? const Color(0xFF6C5CE7)
-                              : Colors.grey.shade500,
-=======
                       color: isSelected
                           ? const Color(0xFF6C5CE7)
                           : Colors.grey.shade500,
->>>>>>> 602537a2cb000f2d1ede5a15b68d81a620591da8
                       size: 24,
                     ),
                   ),
@@ -186,16 +172,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 200),
                     style: TextStyle(
-<<<<<<< HEAD
-                      color:
-                          isSelected
-                              ? const Color(0xFF6C5CE7)
-                              : Colors.grey.shade500,
-=======
                       color: isSelected
                           ? const Color(0xFF6C5CE7)
                           : Colors.grey.shade500,
->>>>>>> 602537a2cb000f2d1ede5a15b68d81a620591da8
                       fontSize: 12,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.normal,
