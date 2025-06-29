@@ -4,6 +4,9 @@ import 'notifications_page.dart';
 import 'cards_page.dart';
 import 'electricity_page.dart';
 import 'filter_page.dart';
+import 'transactions_page.dart';
+import 'services_page.dart';
+import 'send_money_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +46,9 @@ class _MainNavigatorState extends State<MainNavigator> {
     const CardsPage(),
     const ElectricityPage(),
     const FilterPage(),
+    const TransactionsPage(),
+    const ServicesPage(),
+    const SendMoneyPage(),
   ];
 
   @override
@@ -84,6 +90,21 @@ class _MainNavigatorState extends State<MainNavigator> {
               label: 'Filter',
               index: 3,
             ),
+            _buildNavItem(
+              icon: Icons.receipt_outlined,
+              label: 'Transactions',
+              index: 4,
+            ),
+            _buildNavItem(
+              icon: Icons.apps,
+              label: 'Services',
+              index: 5,
+            ),
+            _buildNavItem(
+              icon: Icons.send,
+              label: 'Send Money',
+              index: 6,
+            ),
           ],
         ),
       ),
@@ -108,13 +129,13 @@ class _MainNavigatorState extends State<MainNavigator> {
           Icon(
             icon,
             color: isSelected ? const Color(0xFF4CAF50) : const Color(0xFF666666),
-            size: 24,
+            size: 20,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.w500,
               color: isSelected ? const Color(0xFF4CAF50) : const Color(0xFF666666),
             ),
