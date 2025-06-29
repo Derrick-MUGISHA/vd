@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'login_page.dart';
-import 'notifications_page.dart';
-import 'cards_page.dart';
-import 'electricity_page.dart';
-import 'filter_page.dart';
-import 'transactions_page.dart';
-import 'services_page.dart';
-import 'send_money_page.dart';
-import 'profile_settings_page.dart';
+import 'package:provider/provider.dart';
+import 'services/auth_service.dart';
+import 'services/navigation_service.dart';
+import 'pages/auth/login_page.dart';
+import 'pages/auth/sign_up_page.dart';
+import 'pages/auth/email_verification_page.dart';
+import 'pages/auth/developer_panel.dart';
+import 'home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize AuthService
+  await AuthService().initialize();
+  
   runApp(const MyApp());
 }
 
@@ -19,137 +23,88 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'VidarPay',
-      theme: ThemeData(
-        primarySwatch: Colors.orange,
-        fontFamily: 'SF Pro Display',
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthService()),
+      ],
+      child: MaterialApp(
+        title: 'VidarPay',
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+          fontFamily: 'SF Pro Display',
+          useMaterial3: true,
+          scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+        ),
+        navigatorKey: NavigationService().navigatorKey,
+        home: const AuthWrapper(),
+        routes: {
+          '/login': (context) => const LoginPage(),
+          '/signup': (context) => const SignUpPage(),
+          '/email-verification': (context) {
+            final email = ModalRoute.of(context)!.settings.arguments as String;
+            return EmailVerificationPage(email: email);
+          },
+          '/dashboard': (context) => const HomePage(),
+          '/developer': (context) => const DeveloperPanel(),
+        },
+        debugShowCheckedModeBanner: false,
       ),
-      home: const LoginPage(), // Start with login page
-      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MainNavigator extends StatefulWidget {
-  const MainNavigator({super.key});
-
-  @override
-  State<MainNavigator> createState() => _MainNavigatorState();
-}
-
-class _MainNavigatorState extends State<MainNavigator> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    const NotificationsPage(),
-    const CardsPage(),
-    const ElectricityPage(),
-    const FilterPage(),
-    const TransactionsPage(),
-    const ServicesPage(),
-    const SendMoneyPage(),
-    const ProfileSettingsPage(),
-  ];
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_currentIndex],
-      bottomNavigationBar: Container(
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 20,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(
-              icon: Icons.notifications_outlined,
-              label: 'Notifications',
-              index: 0,
-            ),
-            _buildNavItem(
-              icon: Icons.credit_card_outlined,
-              label: 'Cards',
-              index: 1,
-            ),
-            _buildNavItem(
-              icon: Icons.flash_on_outlined,
-              label: 'Electricity',
-              index: 2,
-            ),
-            _buildNavItem(
-              icon: Icons.tune,
-              label: 'Filter',
-              index: 3,
-            ),
-            _buildNavItem(
-              icon: Icons.receipt_outlined,
-              label: 'Transactions',
-              index: 4,
-            ),
-            _buildNavItem(
-              icon: Icons.apps,
-              label: 'Services',
-              index: 5,
-            ),
-            _buildNavItem(
-              icon: Icons.send,
-              label: 'Send Money',
-              index: 6,
-            ),
-            _buildNavItem(
-              icon: Icons.settings,
-              label: 'Settings',
-              index: 7,
-            ),
-          ],
-        ),
-      ),
+    return Consumer<AuthService>(
+      builder: (context, authService, child) {
+        // Developer mode - skip authentication
+        if (authService.isDeveloperMode) {
+          return const HomePage();
+        }
+
+        // Check authentication status
+        if (authService.isAuthenticated) {
+          // Check if email is verified
+          if (authService.isEmailVerified) {
+            return const HomePage();
+          } else {
+            // Redirect to email verification
+            return EmailVerificationPage(
+              email: authService.currentUserEmail ?? '',
+            );
+          }
+        }
+
+        // Not authenticated - show login
+        return const LoginPage();
+      },
     );
   }
+}
 
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    required int index,
-  }) {
-    final isSelected = _currentIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
+class DeveloperModeToggle extends StatelessWidget {
+  const DeveloperModeToggle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthService>(
+      builder: (context, authService, child) {
+        return FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/developer');
+          },
+          backgroundColor: authService.isDeveloperMode 
+              ? const Color(0xFF4CAF50) 
+              : const Color(0xFFFF6B35),
+          child: Icon(
+            authService.isDeveloperMode ? Icons.developer_mode : Icons.code,
+            color: Colors.white,
+          ),
+        );
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isSelected ? const Color(0xFF4CAF50) : const Color(0xFF666666),
-            size: 20,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: isSelected ? const Color(0xFF4CAF50) : const Color(0xFF666666),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
